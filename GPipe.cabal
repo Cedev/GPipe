@@ -32,7 +32,9 @@ Library
                     Vec         >= 1.0.1 && <2.0,
                     Vec-Boolean >= 1.0.6 && <2.0,
                     base        >= 4     && <5,
-                    transformers
+                    transformers,
+                    hashtables,
+                    hashable
                        
     other-modules: 
                    Formats,

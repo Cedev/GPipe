@@ -46,7 +46,7 @@ import Data.Maybe
 import Data.Boolean
 import Data.Map (Map)
 import qualified Data.Map as Map hiding (Map)
-import qualified Data.HashTable as HT
+import qualified Data.HashTable.IO as HT
 import Control.Exception (evaluate)
 import System.Mem.StableName
 import Data.IntSet (IntSet)
@@ -392,9 +392,9 @@ splitShaders (a,xs) = case mapAccumL splitNode [] xs of (trees, xs2) -> (reverse
 
 createDAG :: [ShaderTree] -> ShaderDAG
 createDAG = second reverse . unsafePerformIO . startDAG
-    where startDAG xs = do ht <- HT.new (==) (fromIntegral . hashStableName)
+    where startDAG xs = do ht <- HT.new
                            runStateT (mapM (createDAG' ht) xs) []
-          createDAG' :: HT.HashTable (StableName ShaderTree) Int -> ShaderTree -> StateT [(ShaderTree, [Int])] IO Int
+          createDAG' :: HT.BasicHashTable (StableName ShaderTree) Int -> ShaderTree -> StateT [(ShaderTree, [Int])] IO Int
           createDAG' ht n = do n' <- liftIO $ evaluate n -- To make makeStableName "stable"
                                k <- liftIO $ makeStableName n'
                                m <- liftIO $ HT.lookup ht k
