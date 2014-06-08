@@ -244,20 +244,22 @@ instance Boolean (Shader c Bool) where
     notB = unaryPreOp bool "!"
     (&&*) = binaryOp bool "&&"
     (||*) = binaryOp bool "||"
-instance Eq a => EqB (Shader c Bool) (Shader c a) where
+instance Eq a => EqB (Shader c a) where
     (==*) = binaryOp bool "=="
     (/=*) = binaryOp bool "!="
-instance Ord a => OrdB (Shader c Bool) (Shader c a) where
+instance Ord a => OrdB (Shader c a) where
     (<*) = binaryOp bool "<"
     (>=*) = binaryOp bool ">="
     (>*) = binaryOp bool ">"
     (<=*) = binaryOp bool "<="
 
-instance IfB (Shader c Bool) (Shader c Int) where
+type instance BooleanOf (Shader c x) = Shader c Bool
+
+instance IfB (Shader c Int) where
     ifB c a b = Shader $ ShaderOp "if" (assign int (\[a,b,c]->a++"?"++b++":"++c)) [fromS c,fromS a,fromS b]
-instance IfB (Shader c Bool) (Shader c Float) where
+instance IfB (Shader c Float) where
     ifB c a b = Shader $ ShaderOp "if" (assign float (\[a,b,c]->a++"?"++b++":"++c)) [fromS c,fromS a,fromS b]
-instance IfB (Shader c Bool) (Shader c Bool) where
+instance IfB (Shader c Bool) where
     ifB c a b = Shader $ ShaderOp "if" (assign bool (\[a,b,c]->a++"?"++b++":"++c)) [fromS c,fromS a,fromS b]
     
 -- | Provides a common way to convert numeric types to integer and floating point representations.
